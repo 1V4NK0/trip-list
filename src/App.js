@@ -1,22 +1,29 @@
 import { useState } from "react";
 import "./index.css";
 
-const initialItems = [
-  { id: 1, description: "Passports", quantity: 2, packed: false },
-  { id: 2, description: "Socks", quantity: 8, packed: false },
-  { id: 3, description: "Laptop", quantity: 1, packed: false },
-  { id: 4, description: "Underwear", quantity: 4, packed: false },
-  { id: 5, description: "Sunscreen", quantity: 1, packed: false },
-  { id: 6, description: "$", quantity: 2000, packed: false },
-  { id: 7, description: "Powerbank", quantity: 1, packed: true },
-];
+// const initialItems = [
+//   { id: 1, description: "Passports", quantity: 2, packed: false },
+//   { id: 2, description: "Socks", quantity: 8, packed: false },
+//   { id: 3, description: "Laptop", quantity: 1, packed: false },
+//   { id: 4, description: "Underwear", quantity: 4, packed: false },
+//   { id: 5, description: "Sunscreen", quantity: 1, packed: false },
+//   { id: 6, description: "$", quantity: 2000, packed: false },
+//   { id: 7, description: "Powerbank", quantity: 1, packed: true },
+// ];
 
 export default function App() {
+  const [items, setItems] = useState([]);
+  function AddItem(item) {
+    //u can't just use items.push(item), the array is immutable,
+    //so u have to return a new array with all items from the previous one + new item
+    setItems(items => [...items,item])
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form onAddItems={AddItem}/>
+      <PackingList items={items}/>
       <Stats />
     </div>
   );
@@ -26,17 +33,22 @@ function Logo() {
   return <h1>🏖️ Far away 🧳</h1>;
 }
 
-function Form() {
+function Form({onAddItems}) {
+
+  
+
   function handleSubmit(event) {
     event.preventDefault();
-
+  
     //creating new object when submitting
     const newItem = {description, amount, packed: false, id: Date.now()}
-    
-    //reseting 
+    onAddItems(newItem);
+    //resetting 
     setAmount(1);
     setDescription('');
   }
+
+  
 
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(1);
@@ -58,11 +70,11 @@ function Form() {
   );
 }
 
-function PackingList() {
+function PackingList({items}) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Item item={item} key={item.id}/>
         ))}
       </ul>
@@ -74,7 +86,7 @@ function Item({ item }) {
   return (
     <li>
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
-        {item.quantity} {item.description}
+        {item.amount} {item.description}
       </span>
       <button className="remove-btn">❌</button>
     </li>
