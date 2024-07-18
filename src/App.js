@@ -3,7 +3,7 @@ import "./index.css";
 
 export default function App() {
   const [items, setItems] = useState([]);
-  
+
   function AddItem(item) {
     //u can't just use items.push(item), the array is immutable,
     //so u have to return a new array with all items from the previous one + new item
@@ -32,7 +32,7 @@ export default function App() {
         onDeleteItem={handleDeleteItem}
         onToggleItem={handleToggle}
       />
-      <Stats items={items}/>
+      <Stats items={items} />
     </div>
   );
 }
@@ -85,10 +85,26 @@ function Form({ onAddItems }) {
 }
 
 function PackingList({ items, onDeleteItem, onToggleItem }) {
+  const [sortBy, setSortBy] = useState("input");
+
+  let sortedItems;
+
+  if (sortBy === "input") sortedItems = items;
+  //we use slice because we can't change items array and we make a copy of it with .slice()
+  if (sortBy === "description")
+    sortedItems = items
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description));
+  if (sortBy === "packed")
+    sortedItems = items
+      .slice()
+      .sort((a,b) => Number(a.packed) - Number(b.packed))
+
+
   return (
     <div className="list">
       <ul>
-        {items.map((item) => (
+        {sortedItems.map((item) => (
           <Item
             item={item}
             onDeleteItem={onDeleteItem}
@@ -97,6 +113,14 @@ function PackingList({ items, onDeleteItem, onToggleItem }) {
           />
         ))}
       </ul>
+
+      <div className="actions">
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="input">Sort by the input order</option>
+          <option value="description">Sort by the description</option>
+          <option value="packed">Sort by the packed status</option>
+        </select>
+      </div>
     </div>
   );
 }
@@ -119,14 +143,18 @@ function Item({ item, onDeleteItem, onToggleItem }) {
   );
 }
 
-function Stats({items}) {
+function Stats({ items }) {
+  if (items.length === 0) {
+    return <footer className="stats">Start packing! 🤗 🚞</footer>;
+  }
+
   const size = items.length;
-  const packedItems = items.filter(item => item.packed === true).length
-  const packedPercentage = size >= 1 ? (packedItems / size) * 100 : 0
+  const packedItems = items.filter((item) => item.packed === true).length;
+  const packedPercentage = size >= 1 ? (packedItems / size) * 100 : 0;
 
   return (
     <footer className="stats">
-       <em>
+      <em>
         {packedPercentage === 100
           ? "Ready to go! Have a nice trip!"
           : `👀 You have ${size} items on your list, and you already packed ${packedItems} (${packedPercentage.toFixed(
