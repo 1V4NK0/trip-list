@@ -39,7 +39,7 @@ export default function App() {
 }
 
 function Logo() {
-  return <h1>🏖️ Far away 🧳</h1>;
+  return <h1>🏖️ pack away 🧳</h1>;
 }
 
 function Form({ onAddItems }) {
@@ -128,7 +128,7 @@ function Stats({size, packedItems}) {
     <footer className="stats">
       <em>
         👀 You have {size} items on your list, and you already packed {packedItems} ({packedPercentage.toFixed(0)}%) of your
-        list;
+        list
       </em>
     </footer>
   );
