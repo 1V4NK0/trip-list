@@ -3,8 +3,7 @@ import "./index.css";
 
 export default function App() {
   const [items, setItems] = useState([]);
-  const size = items.length;
-  const packedItems = items.filter(item => item.packed === true).length
+  
   function AddItem(item) {
     //u can't just use items.push(item), the array is immutable,
     //so u have to return a new array with all items from the previous one + new item
@@ -33,7 +32,7 @@ export default function App() {
         onDeleteItem={handleDeleteItem}
         onToggleItem={handleToggle}
       />
-      <Stats size={size} packedItems={packedItems}/>
+      <Stats items={items}/>
     </div>
   );
 }
@@ -120,15 +119,19 @@ function Item({ item, onDeleteItem, onToggleItem }) {
   );
 }
 
-function Stats({size, packedItems}) {
-  const packedPercentage = size > 1 ? (packedItems / size) * 100 : 0
-  
+function Stats({items}) {
+  const size = items.length;
+  const packedItems = items.filter(item => item.packed === true).length
+  const packedPercentage = size >= 1 ? (packedItems / size) * 100 : 0
 
   return (
     <footer className="stats">
-      <em>
-        👀 You have {size} items on your list, and you already packed {packedItems} ({packedPercentage.toFixed(0)}%) of your
-        list
+       <em>
+        {packedPercentage === 100
+          ? "Ready to go! Have a nice trip!"
+          : `👀 You have ${size} items on your list, and you already packed ${packedItems} (${packedPercentage.toFixed(
+              0
+            )}%) of your list`}
       </em>
     </footer>
   );
