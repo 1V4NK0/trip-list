@@ -3,6 +3,8 @@ import "./index.css";
 
 export default function App() {
   const [items, setItems] = useState([]);
+  const size = items.length;
+  const packedItems = items.filter(item => item.packed === true).length
   function AddItem(item) {
     //u can't just use items.push(item), the array is immutable,
     //so u have to return a new array with all items from the previous one + new item
@@ -15,7 +17,9 @@ export default function App() {
 
   function handleToggle(id) {
     setItems((items) =>
-      items.map((item) => item.id === id ?  { ...item, packed: !item.packed } : item)
+      items.map((item) =>
+        item.id === id ? { ...item, packed: !item.packed } : item
+      )
     );
     // console.log(items);
   }
@@ -29,7 +33,7 @@ export default function App() {
         onDeleteItem={handleDeleteItem}
         onToggleItem={handleToggle}
       />
-      <Stats />
+      <Stats size={size} packedItems={packedItems}/>
     </div>
   );
 }
@@ -66,6 +70,7 @@ function Form({ onAddItems }) {
           </option>
         ))}
       </select>
+
       <input
         type="text"
         placeholder="item..."
@@ -115,11 +120,14 @@ function Item({ item, onDeleteItem, onToggleItem }) {
   );
 }
 
-function Stats() {
+function Stats({size, packedItems}) {
+  const packedPercentage = size > 1 ? (packedItems / size) * 100 : 0
+  
+
   return (
     <footer className="stats">
       <em>
-        👀 You have X items on your list, and you already packed X (X%) of your
+        👀 You have {size} items on your list, and you already packed {packedItems} ({packedPercentage.toFixed(0)}%) of your
         list;
       </em>
     </footer>
