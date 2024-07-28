@@ -20,7 +20,6 @@ export default function App() {
 
   function handleClearList() {
     let choice = window.confirm("Do you want to delete all items?");
-    console.log(choice);
     if (choice) setItems([]);
   }
 
@@ -30,7 +29,6 @@ export default function App() {
         item.id === id ? { ...item, packed: !item.packed } : item
       )
     );
-    // console.log(items);
   }
 
   return (

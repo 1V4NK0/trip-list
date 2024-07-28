@@ -3,7 +3,6 @@ import Item from './Item';
 
 export default function PackingList({ items, onDeleteItem, onToggleItem, onClearList }) {
     const [sortBy, setSortBy] = useState("input");
-  
     let sortedItems;
   
     if (sortBy === "input") sortedItems = items;
